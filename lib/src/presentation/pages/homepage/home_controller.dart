@@ -1,5 +1,7 @@
 import 'package:clean_arch_flutter/src/domain/entities/books.dart';
 import 'package:clean_arch_flutter/src/domain/repositories/books_repository.dart';
+import 'package:clean_arch_flutter/src/domain/usecases/remove_books.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
 import 'home_presenter.dart';
@@ -25,7 +27,16 @@ class HomeController extends Controller {
       refreshUI();
     };
 
-    _presenter.getBooksOnError = (error) {};
+    _presenter.getBooksOnError = (e) {};
+
+    _presenter.removeBooksOnComplete = () {};
+
+    _presenter.removeBooksOnError = (e) {};
+  }
+
+  void removeBooks(String bookId) {
+    _presenter.removeBooks(bookId);
+    refreshUI();
   }
 
   @override
