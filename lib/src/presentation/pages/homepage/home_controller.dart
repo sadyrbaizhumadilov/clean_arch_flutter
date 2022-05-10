@@ -1,6 +1,5 @@
 import 'package:clean_arch_flutter/src/domain/entities/books.dart';
 import 'package:clean_arch_flutter/src/domain/repositories/books_repository.dart';
-import 'package:clean_arch_flutter/src/domain/usecases/remove_books.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
@@ -29,7 +28,9 @@ class HomeController extends Controller {
 
     _presenter.getBooksOnError = (e) {};
 
-    _presenter.removeBooksOnComplete = () {};
+    _presenter.removeBooksOnComplete = () {
+      Navigator.pop(getContext());
+    };
 
     _presenter.removeBooksOnError = (e) {};
   }

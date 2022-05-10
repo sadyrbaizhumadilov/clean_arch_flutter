@@ -50,10 +50,7 @@ class _HomeViewState extends ViewState<HomeView, HomeController> {
                       return Column(
                         children: [
                           for (int i = 0; i < controller.books!.length; i++)
-                            _BooksCard(
-                              controller.books![i],
-                              controller.removeBooks,
-                            ),
+                            _BooksCard(controller.books![i], controller),
                         ],
                       );
                     } else {
@@ -73,10 +70,10 @@ class _HomeViewState extends ViewState<HomeView, HomeController> {
 }
 
 class _BooksCard extends StatelessWidget {
+  final HomeController controller;
   final Books books;
-  final Function(String bookId) removeBooks;
 
-  _BooksCard(this.books, this.removeBooks);
+  _BooksCard(this.books, this.controller);
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -86,43 +83,60 @@ class _BooksCard extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Image.network(
-            books.imageUrl,
-            width: 100,
-            height: 100,
-          ),
-          Column(
-            children: [
-              Text(
-                books.kitap,
-                style: TextStyle(
-                  fontSize: 24,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                books.year,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ],
-          ),
-          GestureDetector(
-            onTap: () {
-              removeBooks(books.id);
-            },
-            child: Icon(
-              Icons.delete,
+      child: SingleChildScrollView(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Image.network(
+              books.imageUrl,
+              width: 100,
+              height: 100,
             ),
-          ),
-        ],
+            Column(
+              children: [
+                Text(
+                  books.kitap,
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  books.year,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
+            GestureDetector(
+              onTap: () => showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      content: Text('Silmek istediğinizden emin misiniz?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'Cancel'),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () => controller.removeBooks(books.id),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    );
+                  }),
+              child: Icon(
+                Icons.delete,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
